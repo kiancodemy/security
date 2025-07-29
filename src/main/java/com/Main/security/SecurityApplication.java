@@ -1,5 +1,6 @@
 package com.Main.security;
 
+import com.Main.security.note.Note;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -15,6 +16,7 @@ public class SecurityApplication {
 	CommandLineRunner commandLineRunner() {
 		return args -> {
 			System.out.print("it is kian");
+			Note a=new Note();
 		};
 	}
 
