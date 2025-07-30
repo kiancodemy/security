@@ -42,7 +42,7 @@ public class NoteService implements nodeServiceFunctions {
     }
 
     @Override
-    public Note updateNote(Long id, String content) {
+    public Note updateNote(Long id, String content,String username) {
         Note finder= nodeRepository.findById(id).orElseThrow(()-> new RuntimeException("Note not found"));
         finder.setContent(content);
         return nodeRepository.save(finder);

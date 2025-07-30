@@ -1,0 +1,16 @@
+services:
+  mysql:
+    image: mysql:8
+    container_name: mysql_kian
+    environment:
+      MYSQL_DATABASE: kian
+      MYSQL_USER: kian
+      MYSQL_PASSWORD: 826
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+volumes:
+  mysql_data: {}
