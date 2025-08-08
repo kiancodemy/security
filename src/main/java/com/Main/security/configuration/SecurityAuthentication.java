@@ -21,11 +21,8 @@ public class SecurityAuthentication implements AuthenticationProvider {
         String username = authentication.getName();
         String password = authentication.getCredentials().toString();
         UserDetails userDetails=userDetailsServices.loadUserByUsername(username);
-        boolean decode=passwordEncoder.matches(password,userDetails.getPassword());
-        if(decode){
-            return new UsernamePasswordAuthenticationToken(username, password, userDetails.getAuthorities());
-        }
-        throw new BadCredentialsException("Invalid username or password");
+        return new UsernamePasswordAuthenticationToken(username, password, userDetails.getAuthorities());
+
     }
 
     @Override
