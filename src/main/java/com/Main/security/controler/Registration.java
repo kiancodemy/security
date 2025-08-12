@@ -1,5 +1,6 @@
 package com.Main.security.controler;
 import com.Main.security.configuration.UserDetailServices;
+import com.Main.security.event.Authentication;
 import com.Main.security.model.Customer;
 import com.Main.security.repository.CustormerRepo;
 import lombok.RequiredArgsConstructor;
@@ -37,8 +38,8 @@ public class Registration {
     }
 
     @GetMapping("/by")
-    public String by(){
-        return "by";
+    public String by(Authentication authentication){
+        return "the name is"+authentication.getClass().getName();
     }
 
 }

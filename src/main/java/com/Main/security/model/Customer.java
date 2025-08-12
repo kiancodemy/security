@@ -1,12 +1,12 @@
 package com.Main.security.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -15,9 +15,21 @@ import lombok.Setter;
 public class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column(name = "customerId")
     private Long id;
+
+    @Column(nullable = false)
+    private String name;
+
     private String email;
     private String pwd;
+    private String mobileNumber;
     private String role;
+    private LocalDateTime createdAt;
+    @PrePersist
+    public void created(){
+        this.createdAt = LocalDateTime.now();
+    }
+
 
 }

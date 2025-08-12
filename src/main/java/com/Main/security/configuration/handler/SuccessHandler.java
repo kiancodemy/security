@@ -14,8 +14,11 @@ import java.io.IOException;
 public class SuccessHandler implements AuthenticationSuccessHandler {
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-        response.sendRedirect(response.encodeRedirectURL("/"));
-        log.info("Authentication Success");
+
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+            response.getWriter().write("{\"message\":\"Login successful\"}");
+            response.setStatus(HttpServletResponse.SC_OK);
 
     }
 }
