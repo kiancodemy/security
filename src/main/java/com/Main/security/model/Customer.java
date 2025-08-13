@@ -1,5 +1,6 @@
 package com.Main.security.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -15,21 +16,12 @@ import java.time.LocalDateTime;
 public class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name = "customerId")
     private Long id;
-
-    @Column(nullable = false)
-    private String name;
-
     private String email;
+
     private String pwd;
-    private String mobileNumber;
     private String role;
-    private LocalDateTime createdAt;
-    @PrePersist
-    public void created(){
-        this.createdAt = LocalDateTime.now();
-    }
+
 
 
 }

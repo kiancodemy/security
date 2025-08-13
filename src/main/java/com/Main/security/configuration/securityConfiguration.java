@@ -9,8 +9,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
@@ -19,6 +21,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.csrf.CsrfFilter;
+import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -34,7 +37,8 @@ public class securityConfiguration {
 
     @Bean
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
-        http.cors(cors -> cors.configurationSource(new CorsConfigurationSource() {
+        CsrfTokenRequestAttributeHandler csrfTokenRequestAttributeHandler=new CsrfTokenRequestAttributeHandler();
+        http.securityContext(c->c.requireExplicitSave(false)).cors(cors -> cors.configurationSource(new CorsConfigurationSource() {
             @Override
             public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
                 CorsConfiguration config = new CorsConfiguration();
@@ -46,12 +50,11 @@ public class securityConfiguration {
                 return config;
 
             }
-        })).csrf(csrf->csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())).addFilterAfter(new CsrfFilterKian(), BasicAuthenticationFilter.class).sessionManagement(c -> c.invalidSessionUrl("/invalidate").maximumSessions(1).maxSessionsPreventsLogin(true).sessionRegistry(sessionRegistry())).authorizeHttpRequests((requests) -> requests.requestMatchers("/by").authenticated().requestMatchers("/register", "/invalidate").permitAll().anyRequest().authenticated());
+        })).csrf(cs->cs.ignoringRequestMatchers("/register","/api/login").csrfTokenRequestHandler(csrfTokenRequestAttributeHandler).csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())).addFilterAfter(new CsrfFilterKian(),BasicAuthenticationFilter.class).sessionManagement(c -> c.sessionCreationPolicy(SessionCreationPolicy.ALWAYS)).authorizeHttpRequests((requests) -> requests.requestMatchers("/by","/user").authenticated().requestMatchers("/register", "/invalidate").permitAll().anyRequest().permitAll());
         http.formLogin(loginForm -> loginForm.loginProcessingUrl("/api/login").usernameParameter("username").passwordParameter("password").successHandler(successHandler)).logout(c->c.logoutUrl("/api/logout").invalidateHttpSession(true).clearAuthentication(true).deleteCookies("JSESSIONID").logoutSuccessHandler(logoutSuccess))
-                .exceptionHandling(ex -> ex
+                .httpBasic(basic -> basic.authenticationEntryPoint(new ErrorHandler())).exceptionHandling(ex -> ex
                         .accessDeniedHandler(new AccesDenidHandler())
-                        .authenticationEntryPoint(new ErrorHandler())
-                ).httpBasic(AbstractHttpConfigurer::disable);
+                );
         return http.build();
     }
 

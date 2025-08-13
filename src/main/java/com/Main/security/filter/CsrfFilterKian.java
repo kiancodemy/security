@@ -9,12 +9,13 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
-public class CsrfFilterKian extends OncePerRequestFilter {
+public class CsrfFilterKian extends OncePerRequestFilter  {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        CsrfToken token=(CsrfToken)request.getAttribute(CsrfToken.class.getName());
+        CsrfToken token=( CsrfToken)request.getAttribute(CsrfToken.class.getName());
         token.getToken();
         filterChain.doFilter(request,response);
+
 
 
     }
