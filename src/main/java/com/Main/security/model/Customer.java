@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -21,6 +23,10 @@ public class Customer {
 
     private String pwd;
     private String role;
+
+    @OneToMany(mappedBy = "customer")
+    private Set<Authority> authorities=new HashSet<>();
+
 
 
 

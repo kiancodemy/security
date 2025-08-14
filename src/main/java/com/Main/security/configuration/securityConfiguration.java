@@ -50,13 +50,11 @@ public class securityConfiguration {
                 return config;
 
             }
-        })).csrf(cs->cs.ignoringRequestMatchers("/register","/api/login").csrfTokenRequestHandler(csrfTokenRequestAttributeHandler).csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())).addFilterAfter(new CsrfFilterKian(),BasicAuthenticationFilter.class).sessionManagement(c -> c.sessionCreationPolicy(SessionCreationPolicy.ALWAYS)).authorizeHttpRequests((requests) -> requests.requestMatchers("/by","/user").authenticated().requestMatchers("/register", "/invalidate").permitAll().anyRequest().permitAll());
-        http.formLogin(loginForm -> loginForm.loginProcessingUrl("/api/login").usernameParameter("username").passwordParameter("password").successHandler(successHandler)).logout(c->c.logoutUrl("/api/logout").invalidateHttpSession(true).clearAuthentication(true).deleteCookies("JSESSIONID").logoutSuccessHandler(logoutSuccess))
-                .httpBasic(basic -> basic.authenticationEntryPoint(new ErrorHandler())).exceptionHandling(ex -> ex
-                        .accessDeniedHandler(new AccesDenidHandler())
-                );
+        })).csrf(cs->cs.ignoringRequestMatchers("/register","/api/login").csrfTokenRequestHandler(csrfTokenRequestAttributeHandler).csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())).addFilterAfter(new CsrfFilterKian(),BasicAuthenticationFilter.class).sessionManagement(c -> c.sessionCreationPolicy(SessionCreationPolicy.ALWAYS)).authorizeHttpRequests((requests) -> requests.requestMatchers("/by","/user").hasRole("USER").requestMatchers("/register", "/invalidate").permitAll().anyRequest().permitAll());
+        http.formLogin(loginForm -> loginForm.loginProcessingUrl("/api/login").usernameParameter("username").passwordParameter("password").successHandler(successHandler)).logout(c->c.logoutUrl("/api/logout").invalidateHttpSession(true).clearAuthentication(true).deleteCookies("JSESSIONID").logoutSuccessHandler(logoutSuccess)).
+                httpBasic(basic -> basic.authenticationEntryPoint(new ErrorHandler())).exceptionHandling(ex -> ex.accessDeniedHandler(new AccesDenidHandler()));
         return http.build();
-    }
+    };
 
 
     @Bean
