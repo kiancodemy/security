@@ -1,15 +1,18 @@
 package com.Main.security.configuration.exceptions;
 
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.web.access.AccessDeniedHandler;
 
 import java.io.IOException;
 
-
+@RequiredArgsConstructor
 public class AccessDeniedException implements AccessDeniedHandler {
+
 
 
     @Override
